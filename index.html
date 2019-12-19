@@ -1,35 +1,87 @@
 <!DOCTYPE html>
 <html lang="en-US">
 
-<head>
+  <head>
     <title>Daniel Ali</title>
     <meta charset="UTF-8">
-</head>
+    <style>
+      h1 {
+        display:block;
+        font-size: 2em;
+        margin-block-start: 0.67em;
+        margin-block-end: 0.67em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        margin-bottom: 0px
+      }
+      h3 {
+        display: block;
+        font-size: 1.17em;
+        font-style: normal;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        margin-bottom: 0px
+      }
+      pre {
+        background-color: dodgerblue;
+        font-family: 'Courier New', Courier, monospace;
+        color: white;
+        padding: 10px;
+      }
+      p {
+        text-align: left;
+      }
+      body {
+        width:50%;
+        margin:auto;
+      }
+      .subhead {
+        font-style:italic;
+        padding-top:0px;
+        margin-top:0px;
+        font-size:small;
+      }
+    </style>
+  </head>
 
-<body>
-<header>
+  <body style="font-family: Verdana,sans-serif;">
+  <header>
     <h1>Daniel Ali</h1>
-    About software and things
-</header>
+    <div class="subhead">About software and things</div>
+  </header>
 
-<p>
+  <hr>
+
+  <h3>Hello, World!</h3>
+  <div class="subhead">2019-12-18</div>
+  <p>
     Hello, World! This is an attempt to create some content to get a small simple website started. This is intended
     as an excercise for me to learn how to program a webpage. Hopefully I'll have some interesting content to read
-    some day.
-</p>
+    some day. In the meantime here's a program.
+  </p>
 
-<p>
-    <pre style="background-color:steelblue;color:powderblue">
+  <p>
+    <pre>
 #include <iostream>
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    cout << "Hello, World!" << endl;
-    return 0;
-}
-    </pre>
-</p>
+  cout << "Hello, World!" << endl;
+  return 0;
+}</pre>
+  </p>
 
-</body>
+  <hr>
+
+  <footer>
+    <a href="https://twitter.com/danielrali">@danielrali</a>
+    <p>© 2019 Daniel Ali</p>
+  </footer>
+
+  </body>
 </html>
