@@ -34,6 +34,7 @@
       }
       p {
         text-align: left;
+        line-height: 1.6;
       }
       body {
         width:50%;
@@ -41,7 +42,7 @@
       }
       .subhead {
         font-style:italic;
-        padding-top:0px;
+        padding-top:2px;
         margin-top:0px;
         font-size:small;
       }
@@ -56,12 +57,40 @@
 
   <hr>
 
+  <h3>Adventures in SPI</h3>
+  <div class="subhead">2019-12-19</div>
+  <p>
+    Serial peripheral interface (SPI) is a wonderful protocol. It has a simple way to serially transfer data in and out of multiple devices using one or more chip select lines, master-out/slave-in (MOSI) and master-in/slave-out (MISO) lines. You can use chip select lines for sending data in and out of various devices. The problem lies when your clock line doesn't clock. It's an even bigger problem when none of your voltages change when they are supposed to.
+  </p>
+
+  <p>
+    The first step to realize everything is broken is first to get it working on a different system. Our system had a microcontroller, a couple of chips that spoke SPI and a uFPGA. The SPI lines were intended for the two chips, they were not going to be used for the uFPGA unless needed for an unforeseen reason. At the point in our development we wanted to talk to one of the chips, so we bought an evaluation board for the microcontroller and the chip we were currently targeting.
+  </p>
+
+  <p>
+    With said evaluation boards, power supplies, cables, bread board, logic analyzer, and related software installed a suitable system was put together to develop the necessary software to configure the chip. Data sheets were poured over, software was developed and things were found to be working... on the development set up.
+  </p>
+
+  <p>
+    After this, the software was loaded onto a custom hardware platform for testing. We we're very hopeful and instantly failed. The logic analyzer showed a vast wasteland of fixed voltages. After many rabbit holes were thoroughly explored, we settled on validating the lines were physically connected and could be driven correctly. This felt like a bad place to be in. To do this, we first targeted the SCLK line. We loaded the microcontroller with an image that put the SCLK into GPIO mode and started manually clocking. What we found was an attempt at clocking, but the voltages were not reaching their expected limits of 0 volts and 3.3 volts. Instead it was clocking between 0 and ~1.5 volts.
+  </p>
+
+  <p>
+    This led us to believe another device was attempting to drive the line. A uFPGA that was using the SPI line, had some debug values set for those particular pins for the eval board and needed to be marked input. With this dealt with, manual clocking of the SPI clock was working wonderfully, driving the lines to the 3.3 and 0 volts limits. With our problem solved, we removed the custom MCU software and replaced it with the current production software. Once we applied the appropriate patch to the uFPGA software and loaded the working development code, we very let down to find that none of the SPI lines even toggled. The hunt for functionality continued.
+  </p>
+
+  <p>
+    When initializing the SPI driver it correctly held SCLK high as required for our system but when data was written to the data output register, SCLK did not move. In fact no lines transitioned at all. This led to more rabbit holes to investigate for why these lines did not move. To make a longer story somewhat shorter, we found a multi-master SPI select pin on the microcontroller tied to ground instead of 3.3 volts. Multi-master is a great thing, but not when you don't correctly account for it. Having it wired this way caused all SPI operations to cease regardless of any software we could load, since the built in SPI peripheral was operating in a slave mode. A minor hardware change was required, but once in place, we filled in our rabbit holes and finally had SPI working.
+  </p>
+
+  <p>
+    The main take away for me from this problem is to carefully approach the software design of custom hardware by first understanding each pin on the chip and how it fits into the overall design. This seems like a simple thing, but can be forgotten in the fray of functional requirements and deadlines. Better developers than I have started their design with a list of each possible pin, their location on the development and production hardware, and their desired initial state. I know because I've used those pin tables many times on the same project.
+  </p>
+
   <h3>Hello, World!</h3>
   <div class="subhead">2019-12-18</div>
   <p>
-    Hello, World! This is an attempt to create some content to get a small simple website started. This is intended
-    as an excercise for me to learn how to program a webpage. Hopefully I'll have some interesting content to read
-    some day. In the meantime here's a program.
+    Hello, World! This is an attempt to create some content to get a small simple website started. This is intended as an exercise for me to learn how to program a webpage. I am not a writer in any capacity, so bear with me as I learn how to write while I attempt it at the same time. Hopefully I'll have some interesting content to read someday. In the meantime here's a program, its definitely not intended just for me to figure out how preformatted text works...
   </p>
 
   <p>
@@ -79,8 +108,9 @@ int main(int argc, char* argv[]) {
   <hr>
 
   <footer>
-    <a href="https://twitter.com/danielrali">@danielrali</a>
-    <p>© 2019 Daniel Ali</p>
+    <a href="https://twitter.com/danielrayali">twitter</a>
+    <a href="https://github.com/danielrayali">github</a>
+    <p>© 2020 Daniel Ali</p>
   </footer>
 
   </body>
