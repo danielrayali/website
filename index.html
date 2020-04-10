@@ -27,9 +27,9 @@
         margin-bottom: 0px
       }
       pre {
-        background-color: dodgerblue;
+        background-color: #e0e2e9;
         font-family: 'Courier New', Courier, monospace;
-        color: white;
+        color: #0d1432;
         padding: 10px;
       }
       p {
@@ -46,13 +46,43 @@
         margin-top:0px;
         font-size:small;
       }
+      /* Create two equal columns that floats next to each other */
+      .column {
+        width: 50%;
+      }
+      .left {
+        float: left;
+      }
+      .right {
+        float: right;
+        height: 78.44px;  /* This is probably not the right way to do this */
+        margin-bottom: 0px;
+      }
+      #right-content {
+        margin-top: 55px;
+        margin-bottom: 0px;
+        float: right;
+      }
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
     </style>
   </head>
 
   <body style="font-family: Verdana,sans-serif;">
   <header>
-    <h1>Daniel Ali</h1>
-    <div class="subhead">About software and things</div>
+    <div class="row">
+      <div class="column left">
+        <h1>Daniel Ali</h1>
+        <div class="subhead">On software and things</div>
+      </div>
+      <div class="column right">
+        <a id="right-content" href="http://danielrayali.com">about me</a>
+      </div>
+    </div>
   </header>
 
   <hr>
@@ -95,7 +125,7 @@
 
   <p>
     <pre>
-#include <iostream>
+#include &lt;iostream&gt;
 
 using namespace std;
 
