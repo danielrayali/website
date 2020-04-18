@@ -32,6 +32,10 @@
         color: #0d1432;
         padding: 10px;
       }
+      pre.inline {
+        background-color: unset;
+        padding: unset;
+      }
       p {
         text-align: left;
         line-height: 1.6;
@@ -87,6 +91,43 @@
   </header>
 
   <hr>
+
+  <h3>Exceptions</h3>
+  <div class="subhead">2020-04-14</div>
+
+  <p>
+    Exceptions can be a very useful mechanism for writing less code while providing a way to handle... exception circumstances. There are probably mighty epics written describing how exceptions <i>should</i> be used, whether they should be used for flow control or only in rare circumstances. I won't pretend to be a C++ standards committee member, but I will describe one way I think exceptions should be used. Below is a typical use case for a C++ class wrapping a POSIX interface.
+  </p>
+
+  <pre>
+void* FileReader::Read(const int fd, const int buffer_size) {
+    uint8_t* buffer = new uint8_t[buffer_size];
+    ssize_t rc = read(fd, buffer, buffer_size);
+    if (rc != 0) {
+        // Handle error
+    }
+    return buffer;
+}</pre>
+
+  <p>
+    There are many ways to skin this cat. You could log an error and return nullptr. This would mean users of this function need to check the result returned for nullptr and handle it appropriately. In this context, this would defeat the purpose of the function. Half the function is handling the error. This is similar to returning an error code, without the context of what went wrong. Hopefully that is solved by logging in the function.
+  </p>
+
+  <p>
+    Indeed, exceptions were invented to solve this very problem. Regardless of the interface, errors are handled completely independent of normal program operation. I believe this to be the right interface to use over returning error codes or reserving special values (e.g. nullptr for pointers) to indicate an error occurred.
+  </p>
+
+  <p>
+    Assuming we've chosen to go with throwing errors versus returning error codes, we have to choose what type to throw. The C++20 standard defines almost 30 exception types to choose from. I believe it is usually better to use your own exception types rather than using exception types defined in the standard library. This will aide in reducing confusion for users or maintainers by differentiating the origin points of the error.
+  </p>
+
+  <p>
+    As programmers, it is natural to wrap a layer of abstraction around specific code and concepts for the sake of reusability. Here, when I suggest using your own exception types, it seems natural to set up an entire slew of exception types, each defining a specific type of error that occurs so each one can be handled properly. I can sense the readers who have stopped reading and have already whipped out their editors to start writing a beautifully reusable system of exception definitions (see Poco's <tt><a href="https://github.com/pocoproject/poco/blob/master/Foundation/include/Poco/Exception.h#L157">POCO_DECLARE_EXCEPTION</a></tt>).
+  </p>
+
+  <p>
+    I suggest doing this on a much smaller scale. Define one exception for your namespace, inherit from <tt>std::exception</tt>, and use this everywhere. Only define a custom exception when you actually need to handle resource clean up. When throwing, dynamic resources are not freed, but I would argue if you are throwing due to an exceptional circumstances let it get caught in main and exit in the default case which I've found to be the 80% solution. Typical resources like memory and file handles will be released upon exit.
+  </p>
 
   <h3>Adventures in SPI</h3>
   <div class="subhead">2019-12-19</div>
