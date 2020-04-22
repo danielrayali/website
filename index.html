@@ -96,7 +96,7 @@
   <div class="subhead">2020-04-14</div>
 
   <p>
-    Exceptions can be a very useful mechanism for writing less code while providing a way to handle... exception circumstances. There are probably mighty epics written describing how exceptions <i>should</i> be used, whether they should be used for flow control or only in rare circumstances. I won't pretend to be a C++ standards committee member, but I will describe one way I think exceptions should be used. Below is a typical use case for a C++ class wrapping a POSIX interface.
+    Exceptions can be a very useful mechanism for writing less code while providing context for what went wrong. There are probably tall epics written describing how exceptions <i>should</i> be used, whether they should be used for flow control or not for example. I won't pretend to be a well-versed C++ philosopher, but I will describe one way that I think is effective, efficient and simple. It doesn't need to be complicated. Below is a typical use case for a C++ class wrapping a POSIX interface.
   </p>
 
   <pre>
@@ -114,7 +114,7 @@ void* FileReader::Read(const int fd, const int buffer_size) {
   </p>
 
   <p>
-    Indeed, exceptions were invented to solve this very problem. Regardless of the interface, errors are handled completely independent of normal program operation. I believe this to be the right interface to use over returning error codes or reserving special values (e.g. nullptr for pointers) to indicate an error occurred.
+    If your on a system that can run Linux, likely you can handle throwing exceptions. Exceptions were invented to solve the problem described above. Regardless of the interface, errors are handled completely independent of normal program operation. I believe this is a better interface to use over returning error codes or reserving special values (e.g. nullptr for pointers) to indicate an error occurred.
   </p>
 
   <p>
@@ -126,7 +126,11 @@ void* FileReader::Read(const int fd, const int buffer_size) {
   </p>
 
   <p>
-    I suggest doing this on a much smaller scale. Define one exception for your namespace, inherit from <tt>std::exception</tt>, and use this everywhere. Only define a custom exception when you actually need to handle resource clean up. When throwing, dynamic resources are not freed, but I would argue if you are throwing due to an exceptional circumstances let it get caught in main and exit in the default case which I've found to be the 80% solution. Typical resources like memory and file handles will be released upon exit.
+    I suggest doing this on a much smaller scale. Define one exception for your namespace, inherit from <tt>std::exception</tt>, and use this everywhere. Only define a custom exception when you actually need to handle resource clean up. When throwing, dynamic resources are not freed, but I would argue if you are throwing due to an exceptional circumstances let it get caught in main and exit in the default case. I've found this to be the 80% solution. Typical resources like memory and file handles will be released upon exit.
+  </p>
+
+  <p>
+    And that's it. There are reasons you would want custom exceptions, to communicate specific information to the user of your code that something wrong and there is something they can do about it during runtime. They can catch these specific errors and programmatically deal with the errors. In my experience this situation happens <i>much less</i> often than just knowing what went wrong by logging a string and terminating the program.
   </p>
 
   <h3>Adventures in SPI</h3>
