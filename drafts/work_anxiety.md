@@ -8,7 +8,4 @@ Once I figured out why I felt this anxiety I could attempt to address the reason
 
 Secondly, it would be a stretch to assign a full time software engineer to work on things with little to no value to the company. We had always operated on lean budgets and all wore many hats of development. The needs of individual projects, multiple projects, and the company are too dynamic to assign good developers on tasks that don't provide value.
 
-Finally, I thought ultimately if I did find myself dreading going into work each day due to what I was working on I could ask for a change. I have a good manager and reasonable colleagues that would be more than willing to help me find the right fit in terms of tasking. What's more is ultimately if the fit isn't there, there are other jobs with better fits. 
-
-
-
+Finally, I thought ultimately if I did find myself dreading going into work each day due to what I was working on I could ask for a change. I have a good manager and reasonable colleagues that would be more than willing to help me find the right fit in terms of tasking. What's more is ultimately if the fit isn't there, there are other jobs with better fits.
